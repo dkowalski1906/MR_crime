@@ -82,10 +82,7 @@ namespace CityPeople
                     {
                         r.material = mat;
                     }
-                } else
-                {
-                    Debug.Log("Material name should start with 'palete_pal...' by convention.");
-                } 
+                }
             }
         }
 

@@ -1,13 +1,18 @@
+using System.Collections;
 using UnityEngine;
 
 public class Fingerprint : MonoBehaviour
 {
     private bool isDetected = false;
+    private bool isDetectedRed = false;
 
     [Header("Material to apply when detected")]
     public Material detectedMaterial;
+    public Material detectedMaterialRed;
 
     private Renderer fingerprintRenderer;
+
+    public float waitTime;
 
     private void Start()
     {
@@ -18,7 +23,7 @@ public class Fingerprint : MonoBehaviour
     private void Update()
     {
         // Si l'empreinte est détectée, applique le matériau
-        if (isDetected && fingerprintRenderer != null && detectedMaterial != null)
+        if (isDetected && fingerprintRenderer != null && detectedMaterial != null && !isDetectedRed)
         {
             fingerprintRenderer.material = detectedMaterial;
         }
@@ -34,10 +39,21 @@ public class Fingerprint : MonoBehaviour
             isDetected = true;
 
             // Notifie le GameManager
-            if (GameManager.Instance != null)
+            if (MuseumManager.Instance != null)
             {
-                GameManager.Instance.AddFingerprintHint();
+                MuseumManager.Instance.AddFingerprintHint();
             }
+
+            //Red render
+            StartCoroutine(HandleRedRender());
         }
+    }
+
+    IEnumerator HandleRedRender()
+    {
+        isDetectedRed = true;
+        fingerprintRenderer.material = detectedMaterialRed;
+        yield return new WaitForSeconds(waitTime);
+        isDetectedRed = false;
     }
 }

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class PeopleManager : MonoBehaviour
 {
-    public List<Transform> targets = new List<Transform>();             // Liste des points à visiter
-    public List<GameObject> peopleToMove = new List<GameObject>();      // Liste des personnages
-    public AnimatorController walkAnimation;                            // Animation de marche
-    public AnimatorController lookAnimation;                            // Animation d'observation
+    public List<Transform> targets = new List<Transform>();
+    public List<GameObject> peopleToMove = new List<GameObject>();
+    public AnimatorController walkAnimation;
+    public AnimatorController lookAnimation;
 
     public float speed = 2f;
     public float stopDistance = 0.5f;
@@ -128,7 +128,7 @@ public class PeopleManager : MonoBehaviour
         do
         {
             newTarget = targets[Random.Range(0, targets.Count)];
-        } while (newTarget == exclude && targets.Count > 1); // Évite de reprendre la même
+        } while (newTarget == exclude && targets.Count > 1);
 
         return newTarget;
     }

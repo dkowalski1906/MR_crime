@@ -13,7 +13,7 @@ public class PoliceInteraction : MonoBehaviour
     [Header("Post-Speech Settings")]
     public AnimatorController policeLookAnimation;
     public Vector3 targetRotationEuler;
-    public float rotationSpeed = 2.0f; // Vitesse de rotation fluide
+    public float rotationSpeed = 2.0f;
 
     private bool hasTransitioned;
     private AudioSource audioSource;

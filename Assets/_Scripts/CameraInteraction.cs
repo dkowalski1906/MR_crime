@@ -25,6 +25,11 @@ public class CameraInteraction : MonoBehaviour
     [Header("Material to apply when detected")]
     public Material detectedMaterial;
 
+    [Header("Photo Sound")]
+    public GameObject cameraGO;
+    public AudioClip cameraSound;
+    private AudioSource audioSourceCameraSound;
+
     private void Start()
     {
         if (cameraObject != null)
@@ -35,6 +40,12 @@ public class CameraInteraction : MonoBehaviour
 
         if (cameraFlash != null)
             cameraFlash.SetActive(false);
+
+        //son de photo
+        audioSourceCameraSound = cameraGO.GetComponent<AudioSource>();
+        if (audioSourceCameraSound == null)
+            audioSourceCameraSound = cameraGO.AddComponent<AudioSource>();
+        audioSourceCameraSound.clip = cameraSound;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,6 +61,7 @@ public class CameraInteraction : MonoBehaviour
                 {
                     cameraView.enabled = false;
                     isCameraMode = false;
+                    audioSourceCameraSound.Play();
                     StartCoroutine(ActivateFlashTemporarily(0.2f));
                     DetectFootprints();
                 }
@@ -87,7 +99,11 @@ public class CameraInteraction : MonoBehaviour
                     renderer.material = detectedMaterial;
                 }
 
-                GameManager.Instance?.AddPictureHint();
+                // Notifie le GameManager
+                if (MuseumManager.Instance != null)
+                {
+                    MuseumManager.Instance?.AddPictureHint();
+                }
             }
         }
     }
