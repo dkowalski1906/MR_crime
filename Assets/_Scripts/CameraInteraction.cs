@@ -28,8 +28,10 @@ public class CameraInteraction : MonoBehaviour
     [Header("Photo Sound")]
     public GameObject cameraGO;
     public AudioClip cameraSound;
+
     private AudioSource audioSourceCameraSound;
 
+    // Initialize camera components and audio for taking photos
     private void Start()
     {
         if (cameraObject != null)
@@ -41,13 +43,15 @@ public class CameraInteraction : MonoBehaviour
         if (cameraFlash != null)
             cameraFlash.SetActive(false);
 
-        //son de photo
         audioSourceCameraSound = cameraGO.GetComponent<AudioSource>();
         if (audioSourceCameraSound == null)
             audioSourceCameraSound = cameraGO.AddComponent<AudioSource>();
+
         audioSourceCameraSound.clip = cameraSound;
+        audioSourceCameraSound.playOnAwake = false;
     }
 
+    // Handle camera mode switching and photo taking when appropriate buttons are triggered
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(TAG_PIC_TRIGGER) || cameraInteractable == null || !cameraInteractable.isSelected)
@@ -56,7 +60,6 @@ public class CameraInteraction : MonoBehaviour
         switch (gameObject.tag)
         {
             case TAG_PIC_BUTTON:
-
                 if (isCameraMode)
                 {
                     cameraView.enabled = false;
@@ -68,7 +71,6 @@ public class CameraInteraction : MonoBehaviour
                 break;
 
             case TAG_CAMERA_BUTTON:
-
                 if (!isCameraMode)
                 {
                     cameraView.enabled = true;
@@ -78,6 +80,7 @@ public class CameraInteraction : MonoBehaviour
         }
     }
 
+    // Cast a ray from the center of the camera to detect footprints and apply material
     private void DetectFootprints()
     {
         if (cameraView == null) return;
@@ -91,14 +94,12 @@ public class CameraInteraction : MonoBehaviour
 
             if (hitObject.CompareTag(TAG_FOOTPRINT))
             {
-                // Appliquer le matériau
                 Renderer renderer = hitObject.GetComponent<Renderer>();
                 if (renderer != null && detectedMaterial != null)
                 {
                     renderer.material = detectedMaterial;
                 }
 
-                // Notifie le GameManager
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.AddFootprintClue();
@@ -109,6 +110,7 @@ public class CameraInteraction : MonoBehaviour
         }
     }
 
+    // Flash effect for a short duration when taking a photo
     private IEnumerator ActivateFlashTemporarily(float duration)
     {
         if (cameraFlash == null) yield break;

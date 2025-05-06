@@ -4,31 +4,30 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Saliva : MonoBehaviour
 {
-    [Header("Matériau à appliquer lors de la détection")]
+    [Header("Material to apply when detected")]
     public Material detectedMaterial;
 
-    private Renderer salivaRenderer;
-
-    [Header("Son de la lampe UV")]
+    [Header("Sound of UV lamp")]
     public GameObject lampGO;
     public AudioClip lampSound;
-    private AudioSource audioSourceLamp;
 
+    private Renderer salivaRenderer;
+    private AudioSource audioSourceLamp;
     private XRGrabInteractable grabInteractable;
 
+    // Initialize the audio source and XR grab interaction
     private void Awake()
     {
-        // Préparation du son
-        if (lampGO != null)
+        if (lampGO != null && lampSound != null)
         {
             audioSourceLamp = lampGO.GetComponent<AudioSource>();
             if (audioSourceLamp == null)
                 audioSourceLamp = lampGO.AddComponent<AudioSource>();
 
             audioSourceLamp.clip = lampSound;
+            audioSourceLamp.playOnAwake = false;
         }
 
-        // Préparation de l'interaction XR
         grabInteractable = GetComponent<XRGrabInteractable>();
         if (grabInteractable != null)
         {
@@ -36,10 +35,11 @@ public class Saliva : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("XRGrabInteractable manquant sur " + gameObject.name);
+            Debug.LogWarning("XRGrabInteractable missing on " + gameObject.name);
         }
     }
 
+    // Clean up event listener when object is destroyed
     private void OnDestroy()
     {
         if (grabInteractable != null)
@@ -48,6 +48,7 @@ public class Saliva : MonoBehaviour
         }
     }
 
+    // Play UV lamp sound when the object is grabbed
     private void OnGrab(SelectEnterEventArgs args)
     {
         if (audioSourceLamp != null && !audioSourceLamp.isPlaying)
@@ -56,6 +57,7 @@ public class Saliva : MonoBehaviour
         }
     }
 
+    // Detect saliva object, mark it as found, and change its material
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Saliva"))

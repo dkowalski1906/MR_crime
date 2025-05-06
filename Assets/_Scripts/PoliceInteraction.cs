@@ -22,6 +22,7 @@ public class PoliceInteraction : MonoBehaviour
     private AudioSource audioSource;
     private bool audioStarted;
 
+    // Initialize the animator and audio source, and start delayed speech
     void Start()
     {
         if (policeSpeechAnimation == null || policeSpeechAudio == null || policeWoman == null || playerTransform == null)
@@ -41,10 +42,9 @@ public class PoliceInteraction : MonoBehaviour
             audioSource = policeWoman.AddComponent<AudioSource>();
 
         audioSource.clip = policeSpeechAudio;
-
-        StartCoroutine(PlayAudioAfterDelay(3f));
     }
 
+    // Wait for a delay before playing the speech audio
     private IEnumerator PlayAudioAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -52,11 +52,16 @@ public class PoliceInteraction : MonoBehaviour
         audioStarted = true;
     }
 
+    // Rotate towards the player while speaking, then transition animation and rotate to target
     void Update()
     {
+        if(GameManager.Instance.policeCanStartToTalk)
+        {
+            StartCoroutine(PlayAudioAfterDelay(2f));
+        }
+
         if (audioStarted && !hasTransitioned && audioSource.isPlaying)
         {
-            // Rotation fluide
             Vector3 directionToPlayer = playerTransform.position - policeWoman.transform.position;
             directionToPlayer.y = 0f;
 
@@ -88,6 +93,7 @@ public class PoliceInteraction : MonoBehaviour
         }
     }
 
+    // Smoothly rotate the police character to a specific rotation after the speech
     private IEnumerator RotateSmoothly(Vector3 targetRotation)
     {
         Quaternion targetRotationQuat = Quaternion.Euler(targetRotation);

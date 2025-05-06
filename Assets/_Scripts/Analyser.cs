@@ -26,17 +26,20 @@ public class Analyser : MonoBehaviour
 
     private Light laboratoryLight;
 
+    // Initialize audio sources for lever and laser sounds
     void Start()
     {
         leverSoundAudioSource = SetupAudioSource(leverSound, leverSoundAudioSource, boxLaserGO);
         laserSoundAudioSource = SetupAudioSource(laserSound, laserSoundAudioSource, boxLaserGO, true);
 
-        //laboratoryLight = laboratoryLightGO.GetComponent<Light>();
-        //if (laboratoryLight == null)
-        //    laboratoryLight = laboratoryLightGO.AddComponent<Light>();
-        //maxLightIntensity = laboratoryLight.intensity;
+        // Set up the laboratory light intensity range (commented out for now)
+        // laboratoryLight = laboratoryLightGO.GetComponent<Light>();
+        // if (laboratoryLight == null)
+        //     laboratoryLight = laboratoryLightGO.AddComponent<Light>();
+        // maxLightIntensity = laboratoryLight.intensity;
     }
 
+    // Setup and configure an audio source component on the target game object
     private AudioSource SetupAudioSource(AudioClip clip, AudioSource existingSource, GameObject targetGO, bool loop = false)
     {
         existingSource = targetGO.GetComponent<AudioSource>();
@@ -48,6 +51,7 @@ public class Analyser : MonoBehaviour
         return existingSource;
     }
 
+    // Start moving the laser from bottom to top position
     public void MoveLaser()
     {
         if (isLaunched) return;
@@ -60,10 +64,9 @@ public class Analyser : MonoBehaviour
 
         leverSoundAudioSource.Play();
         laserSoundAudioSource.Play();
-
-        //laboratoryLight.intensity = minLightIntensity;
     }
 
+    // Stop moving the laser and reset to the bottom position
     public void StopLaser()
     {
         if (!isLaunched) return;
@@ -71,12 +74,13 @@ public class Analyser : MonoBehaviour
         isLaunched = false;
         transform.position = bottomPosition;
 
-        leverSoundAudioSource.Play();
+        leverSoundAudioSource.Play(); 
         laserSoundAudioSource.Stop();
 
-        //laboratoryLight.intensity = maxLightIntensity;
+        // laboratoryLight.intensity = maxLightIntensity; // Reset light intensity (commented out)
     }
 
+    // Move the laser back and forth between top and bottom positions
     void Update()
     {
         if (!isLaunched) return;
@@ -89,14 +93,16 @@ public class Analyser : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
         {
+            // Switch target position when laser reaches its target
             targetPosition = (targetPosition == topPosition) ? bottomPosition : topPosition;
         }
     }
 
+    // Detect collision with objects tagged as "Saliva" and notify the GameManager
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.tag);
-        if(other.tag == "Saliva")
+        if (other.tag == "Saliva")
         {
             GameManager.Instance.AddSalivaAnalysis();
             other.tag = "Untagged";

@@ -5,16 +5,21 @@ using System.Collections.Generic;
 
 public class PeopleManager : MonoBehaviour
 {
+    [Header("People & Targets")]
     public List<Transform> targets = new List<Transform>();
     public List<GameObject> peopleToMove = new List<GameObject>();
+
+    [Header("Animations")]
     public AnimatorController walkAnimation;
     public AnimatorController lookAnimation;
 
+    [Header("Movement Settings")]
     public float speed = 2f;
     public float stopDistance = 0.5f;
     public float rotationSpeed = 5f;
     public float waitTime = 5f;
 
+    // Class to hold state for each moving person
     private class PersonState
     {
         public GameObject person;
@@ -25,11 +30,12 @@ public class PeopleManager : MonoBehaviour
 
     private List<PersonState> personStates = new List<PersonState>();
 
+    // Initialization: assign walk animation and random target to each person
     void Start()
     {
         if (targets.Count == 0)
         {
-            Debug.LogWarning("Aucune cible définie !");
+            Debug.LogWarning("No targets assigned in PeopleManager.");
             return;
         }
 
@@ -37,11 +43,9 @@ public class PeopleManager : MonoBehaviour
         {
             if (person == null) continue;
 
-            Animator animator = person.GetComponent<Animator>();
-            if (animator == null)
-                animator = person.AddComponent<Animator>();
-
-            animator.runtimeAnimatorController = walkAnimation;
+            Animator animator = person.GetComponent<Animator>() ?? person.AddComponent<Animator>();
+            if (walkAnimation != null)
+                animator.runtimeAnimatorController = walkAnimation;
 
             var state = new PersonState
             {
@@ -55,6 +59,7 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
+    // Frame update: move and rotate each person toward their target
     void Update()
     {
         foreach (PersonState state in personStates)
@@ -65,16 +70,16 @@ public class PeopleManager : MonoBehaviour
             Vector3 direction = state.target.position - state.person.transform.position;
             direction.y = 0f;
 
-            if (direction.magnitude > stopDistance)
+            if (direction.sqrMagnitude > stopDistance * stopDistance)
             {
-                // Move
+                // Move forward
                 state.person.transform.position = Vector3.MoveTowards(
                     state.person.transform.position,
                     state.target.position,
                     speed * Time.deltaTime
                 );
 
-                // Rotate
+                // Rotate toward target
                 if (direction != Vector3.zero)
                 {
                     Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -92,35 +97,35 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
-    IEnumerator HandleArrival(PersonState state)
+    // Handle logic when a person reaches their target
+    private IEnumerator HandleArrival(PersonState state)
     {
         state.isWaiting = true;
 
-        // Change animation
+        // Switch to "look" animation
         if (state.animator != null && lookAnimation != null)
             state.animator.runtimeAnimatorController = lookAnimation;
 
-        // Calculer la rotation intermédiaire entre l'actuelle et celle de la cible
+        // Slight rotation toward target's forward direction
         Quaternion targetRotation = Quaternion.Euler(0f, state.target.eulerAngles.y, 0f);
-        // Interpoler de la position actuelle vers la rotation cible, à moitié (0.5f)
         Quaternion intermediateRotation = Quaternion.Slerp(state.person.transform.rotation, targetRotation, 0.5f);
         state.person.transform.rotation = intermediateRotation;
 
+        // Wait for a moment
         yield return new WaitForSeconds(waitTime);
 
-        // Nouvelle cible
+        // Assign a new random target (different from the current one)
         state.target = GetNewRandomTarget(state.target);
 
-        // Reprend l'animation de marche
+        // Switch back to walking animation
         if (state.animator != null && walkAnimation != null)
             state.animator.runtimeAnimatorController = walkAnimation;
 
         state.isWaiting = false;
     }
 
-
-
-    Transform GetNewRandomTarget(Transform exclude)
+    // Pick a new target that isn't the current one
+    private Transform GetNewRandomTarget(Transform exclude)
     {
         if (targets.Count == 0) return null;
 
