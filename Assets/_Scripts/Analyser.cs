@@ -96,9 +96,9 @@ public class Analyser : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.tag);
-        if(other.tag == "Blood")
+        if(other.tag == "Saliva")
         {
-            LaboratoryManager.Instance.AddBloodHintAnalyzed();
+            GameManager.Instance.AddSalivaAnalysis();
             other.tag = "Untagged";
         }
     }

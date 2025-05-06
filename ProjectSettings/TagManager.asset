@@ -9,8 +9,8 @@ TagManager:
   - PicButton
   - CameraButton
   - Footprint
-  - Blood
   - Paint
+  - Saliva
   layers:
   - Default
   - TransparentFX

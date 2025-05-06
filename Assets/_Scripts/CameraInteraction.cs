@@ -99,9 +99,9 @@ public class CameraInteraction : MonoBehaviour
                 }
 
                 // Notifie le GameManager
-                if (MuseumManager.Instance != null)
+                if (GameManager.Instance != null)
                 {
-                    MuseumManager.Instance?.AddPictureHint();
+                    GameManager.Instance.AddFootprintClue();
                 }
 
                 hitObject.tag = "Untagged";
