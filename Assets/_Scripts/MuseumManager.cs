@@ -9,22 +9,27 @@ public class MuseumManager : MonoBehaviour
     public static MuseumManager Instance { get; private set; }
 
     [Header("UI Elements")]
-    public GameObject fingerprintTextObject;
+    public GameObject bloodTextObject;
     public GameObject pictureTextObject;
+    public GameObject paintTextObject;
+
     public GameObject confirmationText;
     public GameObject artTableObjectToHide;
     public GameObject laboratoryConfirmationButton;
     public GameObject laboratoryButton;
 
-    // Suivi des indices (empreintes)
-    [Header("Fingerprints")]
-    public int fingerprintHintsFound;
-    public int fingerprintHintsRequired;
+    // Suivi des indices
+    [Header("Blood Trace")]
+    public int bloodHintsFound;
+    public int bloodHintsRequired;
 
-    // Suivi des indices (photos)
-    [Header("Footprints")]
+    [Header("Footprint")]
     public int pictureHintsFound;
     public int pictureHintsRequired;
+
+    [Header("Paint Trace")]
+    public int paintHintsFound;
+    public int paintHintsRequired;
 
     //Son
     [Header("Success Sound")]
@@ -70,6 +75,28 @@ public class MuseumManager : MonoBehaviour
         audioSourceMuseumSound.volume = 1.0f;
         audioSourceMuseumSound.loop = true;
         audioSourceMuseumSound.Play();
+
+        //modification du hand menu
+        if (bloodTextObject != null)
+        {
+            var text = bloodTextObject.GetComponent<TextMeshPro>();
+            if (text != null)
+                text.text = $"Traces de sang collectées : {bloodHintsFound} / {bloodHintsRequired}";
+        }
+
+        if (pictureTextObject != null)
+        {
+            var text = pictureTextObject.GetComponent<TextMeshPro>();
+            if (text != null)
+                text.text = $"Traces de pas collectées : {pictureHintsFound} / {pictureHintsRequired}";
+        }
+
+        if (paintTextObject != null)
+        {
+            var text = paintTextObject.GetComponent<TextMeshPro>();
+            if (text != null)
+                text.text = $"Traces de peinture collectées : {paintHintsFound} / {paintHintsRequired}";
+        }
     }
 
 
@@ -78,8 +105,7 @@ public class MuseumManager : MonoBehaviour
     /// </summary>
     public void GoToLaboratory()
     {
-        Debug.Log(fingerprintHintsFound + pictureHintsFound);
-        if(fingerprintHintsFound + pictureHintsFound >= (fingerprintHintsRequired + pictureHintsRequired) / 2)
+        if(bloodHintsFound + pictureHintsFound >= (bloodHintsRequired + pictureHintsRequired) / 2)
         {
             SceneManager.LoadScene("Laboratory");
         }
@@ -108,21 +134,21 @@ public class MuseumManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ajoute une empreinte trouvée et met à jour l'UI
+    /// Ajoute une trace de sang trouvée et met à jour l'UI
     /// </summary>
-    public void AddFingerprintHint()
+    public void AddBloodHint()
     {
         //son
         audioSourceSuccessSound.Play();
 
         //modification du hand menu
-        fingerprintHintsFound++;
+        bloodHintsFound++;
 
-        if (fingerprintTextObject != null)
+        if (bloodTextObject != null)
         {
-            var text = fingerprintTextObject.GetComponent<TextMeshPro>();
+            var text = bloodTextObject.GetComponent<TextMeshPro>();
             if (text != null)
-                text.text = $"Fingerprints collected: {fingerprintHintsFound} / {fingerprintHintsRequired}";
+                text.text = $"Traces de sang collectées : {bloodHintsFound} / {bloodHintsRequired}";
         }
     }
 
@@ -141,7 +167,26 @@ public class MuseumManager : MonoBehaviour
         {
             var text = pictureTextObject.GetComponent<TextMeshPro>();
             if (text != null)
-                text.text = $"Pictures taken: {pictureHintsFound} / {pictureHintsRequired}";
+                text.text = $"Traces de pas collectées : {pictureHintsFound} / {pictureHintsRequired}";
+        }
+    }
+
+    /// <summary>
+    /// Ajoute une trace de peinture et met à jour l'UI
+    /// </summary>
+    public void AddPaintHint()
+    {
+        //son
+        audioSourceSuccessSound.Play();
+
+        //modification du hand menu
+        paintHintsFound++;
+
+        if (pictureTextObject != null)
+        {
+            var text = paintTextObject.GetComponent<TextMeshPro>();
+            if (text != null)
+                text.text = $"Traces de peinture collectées : {paintHintsFound} / {paintHintsRequired}";
         }
     }
 }

@@ -88,7 +88,6 @@ public class CameraInteraction : MonoBehaviour
         if (Physics.Raycast(ray, out hit, detectionDistance))
         {
             GameObject hitObject = hit.collider.gameObject;
-            Debug.Log("Objet détecté : " + hitObject.name);
 
             if (hitObject.CompareTag(TAG_FOOTPRINT))
             {
@@ -104,6 +103,8 @@ public class CameraInteraction : MonoBehaviour
                 {
                     MuseumManager.Instance?.AddPictureHint();
                 }
+
+                hitObject.tag = "Untagged";
             }
         }
     }

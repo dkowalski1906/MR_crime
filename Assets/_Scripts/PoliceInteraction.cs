@@ -48,7 +48,7 @@ public class PoliceInteraction : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // Démarre l'audio après le délai
-        audioSource.Play();
+        //audioSource.Play();
         audioStarted = true; // Indiquer que l'audio a commencé
     }
 
