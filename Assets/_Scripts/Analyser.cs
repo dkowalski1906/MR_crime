@@ -64,6 +64,7 @@ public class Analyser : MonoBehaviour
 
         leverSoundAudioSource.Play();
         laserSoundAudioSource.Play();
+        laserSoundAudioSource.volume = 0.5f;
     }
 
     // Stop moving the laser and reset to the bottom position

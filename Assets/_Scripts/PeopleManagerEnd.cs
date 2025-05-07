@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class PeopleManagerEnd : MonoBehaviour
@@ -8,7 +7,7 @@ public class PeopleManagerEnd : MonoBehaviour
     public List<GameObject> peopleToDance = new List<GameObject>();
 
     [Header("Animations")]
-    public AnimatorController danceAnimation;
+    public RuntimeAnimatorController danceAnimation;
 
     private bool hasStartedDancing = false;
 

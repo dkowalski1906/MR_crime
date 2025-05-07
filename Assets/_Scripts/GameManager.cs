@@ -3,7 +3,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
-using UnityEditor.Animations;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -12,9 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Timer")]
-    public TimeSpan timer = TimeSpan.FromMinutes(10);
-    private bool isCounting = false;
     public GameObject timerTextUI;
+    private TimeSpan timer = TimeSpan.FromMinutes(10);
+    private bool isCounting = false;
 
     [Header("UI Elements - Museum")]
     public GameObject salivaClueTextUI;
@@ -70,6 +69,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public GameObject museumStartPoint;
     public GameObject labStartPoint;
+    public GameObject conclusionStartPoint;
     public List<GameObject> introUI;
     public List<GameObject> museumUI;
     public List<GameObject> labUI;
@@ -85,6 +85,8 @@ public class GameManager : MonoBehaviour
     [Header("Instantiations")]
     public GameObject salivaSamplePrefab;
     public Transform salivaSampleSpot;
+    public GameObject tubePaintSamplePrefab;
+    public Transform tubePaintSampleSpot;
 
     [Header("Suspect Info")]
     public int correctSuspectIndex = 3;
@@ -92,6 +94,8 @@ public class GameManager : MonoBehaviour
     [Header("End of the game")]
     public GameObject resultTextUI;
     public bool isWon;
+    public bool isFinished = false;
+    public bool isAtLab = false;
 
     #endregion
 
@@ -126,15 +130,14 @@ public class GameManager : MonoBehaviour
         {
             timer -= TimeSpan.FromSeconds(Time.deltaTime);
 
-            UpdateUIText(timerTextUI, $"{timer.Minutes:D2}:{timer.Seconds:D2}");
-
             if (timer.TotalSeconds <= 0)
             {
-                isCounting = false;
                 timer = TimeSpan.Zero;
-                gameResult(0);
+                GameResult(0);
             }
         }
+
+        UpdateUIText(timerTextUI, $"{timer.Minutes:D2}:{timer.Seconds:D2}");
     }
 
     #region Audio
@@ -175,10 +178,11 @@ public class GameManager : MonoBehaviour
     {
         player.transform.position = museumStartPoint.transform.position;
 
+        introAudio.Stop();
         museumAudio.Play();
         ToggleUI(introUI, false);
         ToggleUI(museumUI, true);
-
+        museumUI[5].SetActive(false);
         UpdateMuseumUI();
     }
 
@@ -245,7 +249,7 @@ public class GameManager : MonoBehaviour
     private void EnterLab()
     {
         player.transform.position = labStartPoint.transform.position;
-
+        isAtLab = true;
         museumAudio.Stop();
         labAudio.Play();
         ToggleUI(introUI, false);
@@ -256,6 +260,10 @@ public class GameManager : MonoBehaviour
         suspect2Slider = GetOrAddComponent<Slider>(suspect2SliderGO);
         suspect3Slider = GetOrAddComponent<Slider>(suspect3SliderGO);
 
+        salivaCluesToAnalyze = salivaCluesFound;
+        paintCluesToAnalyze = paintCluesFound;
+
+        //Intanciation of Saliva Glasses
         for (int i = 0; i < salivaCluesFound; i++)
         {
             Vector3 pos = salivaSampleSpot.position + new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), 0.3f * i, UnityEngine.Random.Range(-0.1f, 0.1f));
@@ -263,11 +271,23 @@ public class GameManager : MonoBehaviour
             Instantiate(salivaSamplePrefab, pos, salivaSampleSpot.rotation, salivaSampleSpot);
         }
 
-        salivaCluesToAnalyze = salivaCluesFound;
-        paintCluesToAnalyze = paintCluesFound;
+        //Intanciation of Tube Paint
+        StartCoroutine(SpawnPaintSamplesRoutine());
 
         UpdateAnalysisUI();
         UpdateSuspectChances();
+    }
+
+    private IEnumerator SpawnPaintSamplesRoutine()
+    {
+        for (int i = 0; i < paintCluesFound; i++)
+        {
+            Vector3 pos = tubePaintSampleSpot.position + new Vector3(0.4f * i, 0f, 0f);
+
+            Instantiate(tubePaintSamplePrefab, pos, tubePaintSampleSpot.rotation, tubePaintSampleSpot);
+
+            yield return new WaitForSeconds(1f); // attendre 1 seconde avant le prochain spawn
+        }
     }
 
     // Called when a saliva clue is analyzed
@@ -285,6 +305,7 @@ public class GameManager : MonoBehaviour
         paintCluesAnalyzed++;
         PlaySuccessSound();
         UpdateAnalysisUI();
+        UpdateSuspectChances();
     }
 
     // Update the lab UI text for analysis progress
@@ -297,7 +318,10 @@ public class GameManager : MonoBehaviour
     // Adjust suspect probability sliders based on clue analysis
     private void UpdateSuspectChances()
     {
-        float t = Mathf.Clamp01(salivaCluesAnalyzed / 15f);
+        int totalAnalyzed = salivaCluesAnalyzed + paintCluesAnalyzed;
+        int totalPossible = 10;
+
+        float t = Mathf.Clamp01((float)totalAnalyzed / totalPossible);
         float guiltyChance = Mathf.Lerp(33f, 100f, t);
         float otherChance = (100f - guiltyChance) / 2f;
 
@@ -305,6 +329,7 @@ public class GameManager : MonoBehaviour
         suspect2Slider.value = otherChance / 100f;
         suspect3Slider.value = guiltyChance / 100f;
     }
+
 
     // Show buttons to select a suspect
     public void ChooseSuspect()
@@ -330,17 +355,32 @@ public class GameManager : MonoBehaviour
 
     #region Fin
 
-    private void gameResult(int state)
+    public void GameResult(int state)
     {
-        if(state == 1)
+        isCounting = false;
+        player.transform.position = conclusionStartPoint.transform.position;
+        isFinished = true;
+        museumAudio.Stop();
+        labAudio.Stop();
+        ToggleUI(introUI, false);
+        ToggleUI(museumUI, false);
+        ToggleUI(labUI, false);
+
+        if (state == 2)
         {
             isWon = true;
             UpdateUIText(resultTextUI, "Bravo ! Vous avez trouvé le coupable !");
         }
-        else
+
+        else if (state == 1)
         {
             isWon = false;
             UpdateUIText(resultTextUI, "Zut ! Le coupable était le numéro 3 !");
+        }
+        else
+        {
+            isWon = false;
+            UpdateUIText(resultTextUI, "Zut ! Le temps est écoulé !");
         }
     }
 
@@ -366,12 +406,15 @@ public class GameManager : MonoBehaviour
     // Update a specific TMP UI text element
     private void UpdateUIText(GameObject obj, string message)
     {
-        if (obj != null)
+        if (obj == null) return;
+
+        var tmpText = obj.GetComponent<TMP_Text>();
+        if (tmpText != null)
         {
-            var text = obj.GetComponent<TextMeshPro>();
-            if (text != null) text.text = message;
+            tmpText.text = message;
         }
     }
+
 
     // Play the success sound (e.g., after collecting a clue)
     private void PlaySuccessSound()

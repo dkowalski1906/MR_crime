@@ -1,4 +1,3 @@
-using UnityEditor.Animations;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,8 +9,8 @@ public class PeopleManager : MonoBehaviour
     public List<GameObject> peopleToMove = new List<GameObject>();
 
     [Header("Animations")]
-    public AnimatorController walkAnimation;
-    public AnimatorController lookAnimation;
+    public RuntimeAnimatorController walkAnimation;
+    public RuntimeAnimatorController lookAnimation;
 
     [Header("Movement Settings")]
     public float speed = 2f;

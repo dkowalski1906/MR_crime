@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class PoliceInteraction : MonoBehaviour
@@ -7,11 +6,11 @@ public class PoliceInteraction : MonoBehaviour
     public GameObject policeWoman;
 
     [Header("Speech Settings")]
-    public AnimatorController policeSpeechAnimation;
+    public RuntimeAnimatorController policeSpeechAnimation;
     public AudioClip policeSpeechAudio;
 
     [Header("Post-Speech Settings")]
-    public AnimatorController policeLookAnimation;
+    public RuntimeAnimatorController policeLookAnimation;
     public Vector3 targetRotationEuler;
     public float rotationSpeed = 2.0f;
 
@@ -44,20 +43,19 @@ public class PoliceInteraction : MonoBehaviour
         audioSource.clip = policeSpeechAudio;
     }
 
-    // Wait for a delay before playing the speech audio
-    private IEnumerator PlayAudioAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        audioSource.Play();
-        audioStarted = true;
-    }
-
     // Rotate towards the player while speaking, then transition animation and rotate to target
     void Update()
     {
-        if(GameManager.Instance.policeCanStartToTalk)
+        //Start audio
+        if(!audioStarted && GameManager.Instance.policeCanStartToTalk)
         {
             StartCoroutine(PlayAudioAfterDelay(2f));
+        }
+
+        //Stop audio
+        if (GameManager.Instance.isFinished || GameManager.Instance.isAtLab)
+        {
+            audioSource.Stop();
         }
 
         if (audioStarted && !hasTransitioned && audioSource.isPlaying)
@@ -91,6 +89,14 @@ public class PoliceInteraction : MonoBehaviour
 
             StartCoroutine(RotateSmoothly(targetRotationEuler));
         }
+    }
+
+    // Wait for a delay before playing the speech audio
+    private IEnumerator PlayAudioAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        audioSource.Play();
+        audioStarted = true;
     }
 
     // Smoothly rotate the police character to a specific rotation after the speech

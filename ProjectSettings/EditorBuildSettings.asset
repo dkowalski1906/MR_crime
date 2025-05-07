@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Museum.unity
     guid: 12248a5d59577db49bee0da01d38be69
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Laboratory.unity
     guid: 44c6210ae7caf8345b3a184a3e609602
   m_configObjects:
