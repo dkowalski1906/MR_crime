@@ -23,6 +23,11 @@ Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'
    > L’application se lancera automatiquement dans le casque
 7. Cliquer sur **Stop** pour arrêter l'expérience
 
+### ❗ En cas de crash
+1. Fermer Unity et rouvrir le projet via **Unity Hub**
+2. Reconnecter le câble Link et vérifier la connexion dans l’application **Meta Quest Link** et dans le casque
+3. Si le problème persiste, **redémarrer le casque**
+
 ## 📦 Lancement du projet SANS Meta Quest Link
 
 ### ✅ Prérequis
@@ -38,5 +43,7 @@ Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'
 6. Attendre que l’application soit transférée sur le **Meta Quest 3**
 7. Lancer manuellement l’application depuis le casque
 
----
-
+### ❗ En cas de crash
+1. Fermer Unity et rouvrir le projet via **Unity Hub**
+2. Vérifier la connexion du casque et s'assurer que le câble fonctionne correctement
+3. Si le problème persiste, **redémarrer le casque**
