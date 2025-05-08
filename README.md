@@ -2,8 +2,6 @@
 
 Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'utilisation de **Meta Quest Link**.
 
----
-
 ## 🔗 Lancement du projet AVEC Meta Quest Link
 
 ### ✅ Prérequis
@@ -24,8 +22,6 @@ Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'
 6. Dans l'éditeur Unity, cliquer sur **Play**  
    > L’application se lancera automatiquement dans le casque
 7. Cliquer sur **Stop** pour arrêter l'expérience
-
----
 
 ## 📦 Lancement du projet SANS Meta Quest Link
 
