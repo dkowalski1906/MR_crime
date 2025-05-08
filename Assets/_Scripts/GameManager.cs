@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
     private AudioSource introAudio;
 
     public bool policeCanStartToTalk = false;
+    public bool scientistCanStartToTalk = false;
 
     [Header("Scene & UI Elements")]
     public GameObject player;
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
 
     [Header("End of the game")]
     public GameObject resultTextUI;
-    public bool isWon;
+    public int stateGame;
     public bool isFinished = false;
     public bool isAtLab = false;
 
@@ -229,6 +230,7 @@ public class GameManager : MonoBehaviour
 
         if (enoughClues)
         {
+            scientistCanStartToTalk = true;
             EnterLab();
         }
         else
@@ -242,6 +244,7 @@ public class GameManager : MonoBehaviour
     // Called when player confirms they want to go to the lab anyway
     public void ConfirmLabEntry()
     {
+        scientistCanStartToTalk = true;
         EnterLab();
     }
 
@@ -368,18 +371,18 @@ public class GameManager : MonoBehaviour
 
         if (state == 2)
         {
-            isWon = true;
+            stateGame = 2;
             UpdateUIText(resultTextUI, "Bravo ! Vous avez trouvé le coupable !");
         }
 
         else if (state == 1)
         {
-            isWon = false;
+            stateGame = 1;
             UpdateUIText(resultTextUI, "Zut ! Le coupable était le numéro 3 !");
         }
         else
         {
-            isWon = false;
+            stateGame = 0;
             UpdateUIText(resultTextUI, "Zut ! Le temps est écoulé !");
         }
     }
