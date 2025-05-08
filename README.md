@@ -1,19 +1,46 @@
-# rrr
+# 🎮 Lancement du projet avec le Meta Quest 3
 
-Liste des outils et appareils :
-1. Casque Meta Quest 3
-2. Câble Link
-3. Application Meta Quest Link (avec un compte Meta)
-4. Application Unity et Unity Hub
+Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'utilisation de **Meta Quest Link**.
 
-Lancement du projet :
-1. Ouvrir le projet dans Unity
-2. Ouvrir l'application Meta Quest Link
-3. Brancher le câble Link entre votre PC et le casque Meta Quest
-4. Vérifier sur l'application Meta Quest Link > Appareils : un Meta Quest 3 est bien connecté. Sinon aller dans Paramètres > Général 
-5. Accéder à File > Build Settings
-6. Vérifier que pour la plateforme on est bien sur Android
-7. Dans la liste des scènes, cocher la scène Museum
-Dans la liste des scènes, cocher uniquement la scène nommée Museum
-Cliquer sur Build and Run pour compiler et lancer l'application
-L'application se lancera automatiquement sur le Meta Quest 3 si celui-ci est correctement connecté
+---
+
+## 🔗 Lancement du projet AVEC Meta Quest Link
+
+### ✅ Prérequis
+- Casque **Meta Quest 3**
+- **Câble Link**
+- Application **Meta Quest Link** (avec un compte Meta connecté)
+- **Unity** et **Unity Hub**
+
+### 🚀 Étapes
+1. Ouvrir le projet dans **Unity**
+2. Lancer l'application **Meta Quest Link** sur le PC
+3. Connecter le casque Meta Quest 3 au PC via le **câble Link**
+4. Vérifier la connexion dans **Meta Quest Link > Appareils**  
+   > Si le casque n’est pas détecté :  
+   > - Aller dans **Paramètres > Général > Exécution OpenXR**  
+   > - Cliquer sur **Définir Meta Quest Link comme runtime par défaut**
+5. Mettre le casque, choisir **Link** dans le menu, puis attendre l'arrivée dans l'interface Link
+6. Dans l'éditeur Unity, cliquer sur **Play**  
+   > L’application se lancera automatiquement dans le casque
+7. Cliquer sur **Stop** pour arrêter l'expérience
+
+---
+
+## 📦 Lancement du projet SANS Meta Quest Link
+
+### ✅ Prérequis
+- Casque **Meta Quest 3**
+- **Unity** et **Unity Hub**
+
+### 🚀 Étapes
+1. Ouvrir le projet dans **Unity**
+2. Aller dans **File > Build Settings**
+3. Vérifier que la plateforme sélectionnée est bien **Android**
+4. Dans la liste des scènes, **cocher uniquement la scène _Museum_**
+5. Cliquer sur **Build and Run**
+6. Attendre que l’application soit transférée sur le **Meta Quest 3**
+7. Lancer manuellement l’application depuis le casque
+
+---
+
