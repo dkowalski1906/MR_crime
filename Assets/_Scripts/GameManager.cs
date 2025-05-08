@@ -314,8 +314,8 @@ public class GameManager : MonoBehaviour
     // Update the lab UI text for analysis progress
     private void UpdateAnalysisUI()
     {
-        UpdateUIText(salivaAnalysisTextUI, $"Traces de salive analysées : {salivaCluesAnalyzed} / {salivaCluesToAnalyze}");
-        UpdateUIText(paintAnalysisTextUI, $"Traces de peinture analysées : {paintCluesAnalyzed} / {paintCluesToAnalyze}");
+        UpdateUIText(salivaAnalysisTextUI, $"Salive analysée dans le séquenceur ADN : {salivaCluesAnalyzed} / {salivaCluesToAnalyze}");
+        UpdateUIText(paintAnalysisTextUI, $"Peinture analysée dans la centrifugeuse : {paintCluesAnalyzed} / {paintCluesToAnalyze}");
     }
 
     // Adjust suspect probability sliders based on clue analysis
