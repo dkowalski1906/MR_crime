@@ -236,8 +236,8 @@ public class GameManager : MonoBehaviour
         else
         {
             UpdateUIText(confirmationTextUI, "Vous n'avez pas assez d'indices. Voulez-vous aller au laboratoire quand même ?");
-            confirmLabButton?.SetActive(true);
-            goToLabButton?.SetActive(false);
+            confirmLabButton.SetActive(true);
+            goToLabButton.SetActive(false);
         }
     }
 
@@ -252,6 +252,7 @@ public class GameManager : MonoBehaviour
     private void EnterLab()
     {
         player.transform.position = labStartPoint.transform.position;
+
         isAtLab = true;
         museumAudio.Stop();
         labAudio.Play();
@@ -362,6 +363,8 @@ public class GameManager : MonoBehaviour
     {
         isCounting = false;
         player.transform.position = conclusionStartPoint.transform.position;
+        player.transform.rotation = conclusionStartPoint.transform.rotation;
+
         isFinished = true;
         museumAudio.Stop();
         labAudio.Stop();

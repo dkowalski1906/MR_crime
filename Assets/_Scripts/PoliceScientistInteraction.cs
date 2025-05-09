@@ -35,6 +35,11 @@ public class PoliceScientistInteraction : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.isAtLab && isPolice)
+        {
+            audioSource.Stop();
+        }
+
         // Condition d'autorisation de parole selon le type de personnage
         bool canStartToTalk = (isPolice && GameManager.Instance.policeCanStartToTalk)
                            || (isScientist && GameManager.Instance.scientistCanStartToTalk);
