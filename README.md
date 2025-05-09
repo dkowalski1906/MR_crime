@@ -47,3 +47,8 @@ Ce guide explique deux méthodes pour lancer le projet : **avec** ou **sans** l'
 1. Fermer Unity et rouvrir le projet via **Unity Hub**
 2. Vérifier la connexion du casque et s'assurer que le câble fonctionne correctement
 3. Si le problème persiste, **redémarrer le casque**
+
+# Assets
+
+1. Pour retrouver les prefabs (3D) : **Assets > _Prefabs**
+2. Pour retrouver les sons : **Assets > _Sounds**
